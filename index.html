@@ -25,9 +25,10 @@
                   radial-gradient(1200px 800px at 80% 20%, var(--bg2), transparent 55%),
                   linear-gradient(180deg, #ffffff, #fff);
       min-height:100vh;
-      overflow:hidden; /* helps the runaway button stay inside the visible area */
+      overflow:hidden;
     }
 
+    /* floating hearts */
     .floaty{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
     .h{
       position:absolute; bottom:-40px; opacity:.28; font-size:22px;
@@ -45,9 +46,8 @@
       display:grid;
       place-items:center;
     }
-
     .card{
-      width:min(720px, 92vw);
+      width:min(760px, 92vw);
       background:var(--card);
       border:1px solid rgba(0,0,0,.06);
       border-radius:var(--radius);
@@ -55,16 +55,14 @@
       padding:28px 22px;
       text-align:center;
     }
-
     .badge{
       display:inline-flex; align-items:center; gap:10px;
       padding:10px 14px; border-radius:999px;
       background:#fff; border:1px solid rgba(0,0,0,.06);
       box-shadow:0 10px 30px rgba(0,0,0,.06);
-      font-weight:700;
+      font-weight:800;
       margin-bottom:14px;
     }
-
     h1{
       margin:0;
       font-size:clamp(26px, 3.4vw, 44px);
@@ -107,12 +105,11 @@
       color:var(--text);
       border:1px solid rgba(0,0,0,.12);
       box-shadow:0 12px 28px rgba(0,0,0,.08);
-      position:absolute; /* so we can move it */
+      position:absolute;
       left:62%;
       top:58%;
       transform:translate(-50%,-50%);
     }
-
     .yesWrap{
       position:absolute;
       left:30%;
@@ -129,7 +126,89 @@
       border:1px solid rgba(225,29,72,.20);
     }
     .result strong{color:var(--accent)}
+
+    .quiz{
+      display:none;
+      margin-top:18px;
+      text-align:left;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:22px;
+      padding:16px;
+    }
+    .quiz h2{
+      margin:0 0 6px;
+      font-size:18px;
+      letter-spacing:-0.01em;
+    }
+    .quiz .hint{margin:0 0 14px; color:var(--muted); font-size:14px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:10px;
+    }
+    @media (max-width: 560px){
+      .grid{grid-template-columns: repeat(2, minmax(0, 1fr));}
+    }
+    .opt{
+      border-radius:16px;
+      padding:12px 12px;
+      background:rgba(255,241,245,.45);
+      border:1px solid rgba(225,29,72,.18);
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .2s ease;
+      box-shadow:0 10px 22px rgba(0,0,0,.06);
+      text-align:center;
+    }
+    .opt:active{transform:scale(.98)}
+    .opt:hover{box-shadow:0 14px 30px rgba(0,0,0,.08)}
+
     .tiny{font-size:12px; color:var(--muted); margin-top:10px}
+
+    /* Modal */
+    .modalBackdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:20;
+    }
+    .modal{
+      width:min(720px, 96vw);
+      background:#fff;
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:0 30px 90px rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .modalTop{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px;
+      background:linear-gradient(135deg, rgba(225,29,72,.10), rgba(251,113,133,.12));
+      border-bottom:1px solid rgba(0,0,0,.06);
+      font-weight:900;
+    }
+    .closeBtn{
+      border:0;
+      background:#fff;
+      border-radius:999px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-weight:900;
+      border:1px solid rgba(0,0,0,.10);
+    }
+    .modalBody{padding:14px}
+    .imgWrap{
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
+    }
+    .imgWrap img{display:block; width:100%; height:auto}
+    .modalMsg{margin-top:10px; color:var(--muted)}
   </style>
 </head>
 <body>
@@ -149,11 +228,41 @@
       </div>
 
       <div class="result" id="result">
-        <strong>YAYYYYY!</strong> 💞<br/>
-        Date locked in. I’ll bring the love, you bring that smile.
+        <strong>That’s the one and only choice you have.</strong> ❤️
+      </div>
+
+      <div class="quiz" id="quiz">
+        <h2>Guess your pet name. There is no wrong option.</h2>
+        <p class="hint">Pick one 😄</p>
+        <div class="grid" id="options">
+          <div class="opt" data-name="Putu">Putu</div>
+          <div class="opt" data-name="Putkuli">Putkuli</div>
+          <div class="opt" data-name="Sonta">Sonta</div>
+          <div class="opt" data-name="Gablu">Gablu</div>
+          <div class="opt" data-name="Putku">Putku</div>
+          <div class="opt" data-name="Puchu">Puchu</div>
+          <div class="opt" data-name="Panda">Panda</div>
+          <div class="opt" data-name="Baka">Baka</div>
+        </div>
       </div>
 
       <div class="tiny">Tip: On phones, tapping “No” makes it jump away.</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modalBackdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-label="Pet name image">
+    <div class="modal">
+      <div class="modalTop">
+        <div id="modalTitle">Pet Name</div>
+        <button class="closeBtn" id="closeBtn">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="imgWrap">
+          <img id="modalImg" alt="Pet name image" />
+        </div>
+        <div class="modalMsg" id="modalMsg">❤️</div>
+      </div>
     </div>
   </div>
 
@@ -162,10 +271,53 @@
     const noBtn  = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const result = document.getElementById('result');
+    const quiz   = document.getElementById('quiz');
+
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle    = document.getElementById('modalTitle');
+    const modalImg      = document.getElementById('modalImg');
+    const modalMsg      = document.getElementById('modalMsg');
+    const closeBtn      = document.getElementById('closeBtn');
+
+    // ✅ OPTION 1: Local images in /images folder (case-sensitive filenames!)
+    // Put these files in your repo at:
+    // /images/putu.jpg, /images/putkuli.jpg, /images/sonta.jpg, /images/gablu.jpg,
+    // /images/putku.jpg, /images/puchu.jpg, /images/panda.jpg, /images/baka.jpg
+    const imageMap = {
+      "Putu": "images/putu.jpg",
+      "Putkuli": "images/putkuli.jpg",
+      "Sonta": "images/sonta.jpg",
+      "Gablu": "images/gablu.jpg",
+      "Putku": "images/putku.jpg",
+      "Puchu": "images/puchu.jpg",
+      "Panda": "images/panda.jpg",
+      "Baka": "images/baka.jpg"
+    };
+
+    function openModalForName(name){
+      modalTitle.textContent = name;
+
+      const src = imageMap[name];
+      if (!src) {
+        modalImg.removeAttribute("src");
+        modalMsg.textContent = "Image not found — check your filename in /images 😅";
+      } else {
+        modalImg.src = src;
+        modalMsg.textContent = `No wrong option. You’re ${name} forever 😌❤️`;
+      }
+
+      modalBackdrop.style.display = "flex";
+      hearts(12);
+    }
+
+    function closeModal(){
+      modalBackdrop.style.display = "none";
+      modalImg.removeAttribute("src");
+    }
 
     // Move the "No" button to a random position inside the arena
     function moveNoButton(){
-      const pad = 10; // keep away from edges a bit
+      const pad = 10;
 
       const arenaRect = arena.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
@@ -173,7 +325,6 @@
       const maxX = arenaRect.width  - btnRect.width  - pad;
       const maxY = arenaRect.height - btnRect.height - pad;
 
-      // If viewport is tiny, just bail safely
       if (maxX <= pad || maxY <= pad) return;
 
       const x = pad + Math.random() * (maxX - pad);
@@ -181,19 +332,19 @@
 
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
-      noBtn.style.transform = "none"; // since we're now using pixel positions
+      noBtn.style.transform = "none";
     }
 
-    // Desktop: run away when hovered
+    // Desktop hover
     noBtn.addEventListener('mouseenter', moveNoButton);
 
-    // Mobile: run away when finger tries to tap it
+    // Mobile tap
     noBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault(); // prevent accidental click
+      e.preventDefault();
       moveNoButton();
     }, { passive: false });
 
-    // Also move it if the user gets close (fun extra)
+    // Extra: gets away if cursor gets close
     arena.addEventListener('mousemove', (e) => {
       const arenaRect = arena.getBoundingClientRect();
       const bx = parseFloat(noBtn.style.left || (arenaRect.width * 0.62));
@@ -201,21 +352,36 @@
       const cx = e.clientX - arenaRect.left;
       const cy = e.clientY - arenaRect.top;
 
-      const dx = cx - bx;
-      const dy = cy - by;
-      const dist = Math.hypot(dx, dy);
-
+      const dist = Math.hypot(cx - bx, cy - by);
       if (dist < 90) moveNoButton();
     });
 
     yesBtn.addEventListener('click', () => {
       result.style.display = 'block';
-      hearts(26);
-      // optional: disable the no button once yes is clicked
+      quiz.style.display = 'block';
+      hearts(28);
       noBtn.style.display = 'none';
+      quiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    // Make it start in a random spot (so it feels alive)
+    // Option clicks
+    document.getElementById('options').addEventListener('click', (e) => {
+      const opt = e.target.closest('.opt');
+      if(!opt) return;
+      const name = opt.getAttribute('data-name') || opt.textContent.trim();
+      openModalForName(name);
+    });
+
+    // Modal close
+    closeBtn.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // initial positions
     window.addEventListener('load', () => setTimeout(moveNoButton, 250));
     window.addEventListener('resize', () => moveNoButton());
 
