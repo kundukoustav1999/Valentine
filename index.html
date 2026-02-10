@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Happy Valentine’s Day ❤️</title>
+  <title>Valentine? ❤️</title>
   <style>
     :root{
       --bg1:#fff1f5;
       --bg2:#fff7ed;
-      --card:#ffffffcc;
-      --text:#1f2937;
+      --text:#111827;
       --muted:#6b7280;
       --accent:#e11d48;
       --accent2:#fb7185;
-      --shadow: 0 20px 60px rgba(0,0,0,.10);
-      --radius: 24px;
+      --card:#ffffffcc;
+      --shadow: 0 20px 60px rgba(0,0,0,.12);
+      --radius: 26px;
     }
     *{box-sizing:border-box}
     body{
@@ -25,218 +25,201 @@
                   radial-gradient(1200px 800px at 80% 20%, var(--bg2), transparent 55%),
                   linear-gradient(180deg, #ffffff, #fff);
       min-height:100vh;
-      overflow-x:hidden;
+      overflow:hidden; /* helps the runaway button stay inside the visible area */
     }
-    .wrap{max-width:980px;margin:0 auto;padding:24px}
-    header{
-      margin:28px 0 18px;
-      display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+
+    .floaty{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+    .h{
+      position:absolute; bottom:-40px; opacity:.28; font-size:22px;
+      animation: rise linear forwards;
+      filter: drop-shadow(0 8px 10px rgba(0,0,0,.08));
     }
-    .badge{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 14px;border-radius:999px;background:#fff;
-      box-shadow:0 10px 30px rgba(0,0,0,.06);
-      border:1px solid rgba(0,0,0,.05);
-      font-weight:600;
-    }
-    h1{
-      font-size:clamp(32px, 4vw, 54px);
-      margin:0;
-      letter-spacing:-0.03em;
-      line-height:1.05;
-    }
-    .sub{margin:8px 0 0;color:var(--muted);font-size:clamp(14px, 1.4vw, 18px)}
-    .grid{
+    @keyframes rise{ to{ transform: translateY(-115vh) translateX(var(--dx)); opacity:0; } }
+
+    .wrap{
+      position:relative; z-index:1;
+      max-width:980px;
+      margin:0 auto;
+      padding:24px;
+      min-height:100vh;
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      align-items:stretch;
+      place-items:center;
     }
-    @media (max-width: 860px){
-      .grid{grid-template-columns:1fr}
-    }
+
     .card{
+      width:min(720px, 92vw);
       background:var(--card);
       border:1px solid rgba(0,0,0,.06);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:28px 22px;
+      text-align:center;
+    }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px; border-radius:999px;
+      background:#fff; border:1px solid rgba(0,0,0,.06);
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      font-weight:700;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(26px, 3.4vw, 44px);
+      letter-spacing:-0.03em;
+      line-height:1.1;
+    }
+    p{margin:12px 0 0; color:var(--muted); line-height:1.6}
+
+    .arena{
+      margin-top:22px;
       position:relative;
+      height:320px;
+      border-radius:22px;
+      background: rgba(255,255,255,.65);
+      border:1px solid rgba(0,0,0,.06);
       overflow:hidden;
     }
-    .card h2{margin:0 0 10px;font-size:20px}
-    .card p{margin:0 0 10px;line-height:1.6;color:#111827}
-    .muted{color:var(--muted)}
-    .pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .pill{
-      padding:10px 12px;border-radius:999px;
-      background:#fff;border:1px solid rgba(0,0,0,.06);
-      font-weight:600;font-size:14px;
-    }
-    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    button{
+
+    .btn{
       border:0;
       border-radius:999px;
-      padding:12px 14px;
-      font-weight:700;
+      padding:14px 18px;
+      font-weight:900;
       cursor:pointer;
       transition: transform .08s ease, box-shadow .2s ease;
-      box-shadow:0 10px 25px rgba(225,29,72,.18);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      font-size:16px;
+      min-width:120px;
     }
-    .primary{
+    .btn:active{transform:scale(.98)}
+
+    .yes{
       background:linear-gradient(135deg, var(--accent), var(--accent2));
       color:white;
+      box-shadow:0 12px 28px rgba(225,29,72,.22);
     }
-    .ghost{
+    .no{
       background:#fff;
-      border:1px solid rgba(0,0,0,.08);
-      box-shadow:0 10px 25px rgba(0,0,0,.06);
       color:var(--text);
+      border:1px solid rgba(0,0,0,.12);
+      box-shadow:0 12px 28px rgba(0,0,0,.08);
+      position:absolute; /* so we can move it */
+      left:62%;
+      top:58%;
+      transform:translate(-50%,-50%);
     }
-    button:active{transform:scale(.98)}
-    .photos{
-      display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+
+    .yesWrap{
+      position:absolute;
+      left:30%;
+      top:58%;
+      transform:translate(-50%,-50%);
     }
-    .ph{
-      aspect-ratio: 4/3;
-      border-radius:18px;
-      background:
-        linear-gradient(135deg, rgba(225,29,72,.10), rgba(251,113,133,.12)),
-        linear-gradient(0deg, #fff, #fff);
-      border:1px dashed rgba(225,29,72,.35);
-      display:flex;align-items:center;justify-content:center;
-      color:rgba(225,29,72,.75);
-      font-weight:800;
-      text-align:center;
-      padding:10px;
-    }
-    .note{
+
+    .result{
+      margin-top:18px;
       display:none;
-      margin-top:12px;
-      padding:14px 14px;
+      padding:14px 16px;
       border-radius:18px;
       background:#fff;
       border:1px solid rgba(225,29,72,.20);
     }
-    .note strong{color:var(--accent)}
-    footer{
-      margin:18px 0 30px;
-      text-align:center;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .floaty{
-      position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;
-    }
-    .wrap, header, .card{position:relative;z-index:1}
-    .h{
-      position:absolute;
-      bottom:-40px;
-      opacity:.25;
-      font-size:20px;
-      animation: rise linear forwards;
-      filter: drop-shadow(0 8px 10px rgba(0,0,0,.08));
-    }
-    @keyframes rise{
-      to{ transform: translateY(-115vh) translateX(var(--dx)); opacity:0; }
-    }
+    .result strong{color:var(--accent)}
+    .tiny{font-size:12px; color:var(--muted); margin-top:10px}
   </style>
 </head>
 <body>
   <div class="floaty" id="floaty"></div>
 
   <div class="wrap">
-    <header>
-      <div>
-        <div class="badge">❤️ Valentine’s Day</div>
-        <h1>For <span style="color:var(--accent)">HER NAME</span></h1>
-        <p class="sub">A tiny website for the person who makes my world softer, brighter, and better.</p>
-      </div>
-      <div class="badge">
-        <span>From:</span>
-        <span style="color:var(--accent);font-weight:800">YOUR NAME</span>
-      </div>
-    </header>
+    <div class="card">
+      <div class="badge">❤️ Valentine’s Question</div>
+      <h1>Gablu Chan, will you be my valentine?</h1>
+      <p>Choose wisely 😌</p>
 
-    <section class="grid">
-      <div class="card">
-        <h2>My love letter 💌</h2>
-        <p>
-          Hey <strong>HER NICKNAME</strong>,<br><br>
-          I just wanted to say that I love you — not in a dramatic way, but in the
-          quiet, everyday way that feels like home. Thank you for being you.
-        </p>
-        <p class="muted">(Edit this paragraph to sound like you — short is perfect.)</p>
-
-        <div class="pillrow">
-          <div class="pill">Reason #1: SOMETHING YOU LOVE</div>
-          <div class="pill">Reason #2: INSIDE JOKE</div>
-          <div class="pill">Reason #3: HOW SHE MAKES YOU FEEL</div>
+      <div class="arena" id="arena" aria-label="button area">
+        <div class="yesWrap">
+          <button class="btn yes" id="yesBtn">Yes 💖</button>
         </div>
-
-        <div class="btnrow">
-          <button class="primary" id="revealBtn">Tap for a secret</button>
-          <button class="ghost" id="confettiBtn">Make it rain hearts</button>
-        </div>
-
-        <div class="note" id="note">
-          <strong>Secret unlocked:</strong>
-          I choose you. Today, tomorrow, and all the little days in between. ❤️
-        </div>
+        <button class="btn no" id="noBtn">No 🙈</button>
       </div>
 
-      <div class="card">
-        <h2>Our moments 📸</h2>
-        <p class="muted">Replace these with your photos (optional).</p>
-        <div class="photos">
-          <div class="ph">PHOTO 1<br/>Favorite memory</div>
-          <div class="ph">PHOTO 2<br/>That one cute pic</div>
-          <div class="ph">PHOTO 3<br/>A small moment</div>
-          <div class="ph">PHOTO 4<br/>A big smile</div>
-        </div>
+      <div class="result" id="result">
+        <strong>YAYYYYY!</strong> 💞<br/>
+        Date locked in. I’ll bring the love, you bring that smile.
       </div>
-    </section>
 
-    <section class="card" style="margin-top:18px">
-      <h2>Will you be my Valentine? 💘</h2>
-      <p class="muted">Choose wisely (this website is extremely biased).</p>
-      <div class="btnrow">
-        <button class="primary" id="yesBtn">Yes 💖</button>
-        <button class="ghost" id="maybeBtn">Maybe 😄</button>
-      </div>
-      <div class="note" id="answer" style="display:none"></div>
-    </section>
-
-    <footer>
-      Made with love • <span id="today"></span>
-    </footer>
+      <div class="tiny">Tip: On phones, tapping “No” makes it jump away.</div>
+    </div>
   </div>
 
   <script>
-    const note = document.getElementById('note');
-    const answer = document.getElementById('answer');
+    const arena  = document.getElementById('arena');
+    const noBtn  = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const result = document.getElementById('result');
 
-    document.getElementById('today').textContent =
-      new Date().toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' });
+    // Move the "No" button to a random position inside the arena
+    function moveNoButton(){
+      const pad = 10; // keep away from edges a bit
 
-    document.getElementById('revealBtn').addEventListener('click', () => {
-      note.style.display = (note.style.display === 'block') ? 'none' : 'block';
+      const arenaRect = arena.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = arenaRect.width  - btnRect.width  - pad;
+      const maxY = arenaRect.height - btnRect.height - pad;
+
+      // If viewport is tiny, just bail safely
+      if (maxX <= pad || maxY <= pad) return;
+
+      const x = pad + Math.random() * (maxX - pad);
+      const y = pad + Math.random() * (maxY - pad);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+      noBtn.style.transform = "none"; // since we're now using pixel positions
+    }
+
+    // Desktop: run away when hovered
+    noBtn.addEventListener('mouseenter', moveNoButton);
+
+    // Mobile: run away when finger tries to tap it
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // prevent accidental click
+      moveNoButton();
+    }, { passive: false });
+
+    // Also move it if the user gets close (fun extra)
+    arena.addEventListener('mousemove', (e) => {
+      const arenaRect = arena.getBoundingClientRect();
+      const bx = parseFloat(noBtn.style.left || (arenaRect.width * 0.62));
+      const by = parseFloat(noBtn.style.top  || (arenaRect.height * 0.58));
+      const cx = e.clientX - arenaRect.left;
+      const cy = e.clientY - arenaRect.top;
+
+      const dx = cx - bx;
+      const dy = cy - by;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < 90) moveNoButton();
     });
 
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      answer.style.display = 'block';
-      answer.innerHTML = "YAY! 💞 Date locked in. I’ll bring the love, you bring that smile.";
-      hearts(24);
+    yesBtn.addEventListener('click', () => {
+      result.style.display = 'block';
+      hearts(26);
+      // optional: disable the no button once yes is clicked
+      noBtn.style.display = 'none';
     });
 
-    document.getElementById('maybeBtn').addEventListener('click', () => {
-      answer.style.display = 'block';
-      answer.innerHTML = "I’ll take a 'maybe'… but I’m still going to spoil you. 😌❤️";
-      hearts(14);
-    });
+    // Make it start in a random spot (so it feels alive)
+    window.addEventListener('load', () => setTimeout(moveNoButton, 250));
+    window.addEventListener('resize', () => moveNoButton());
 
-    document.getElementById('confettiBtn').addEventListener('click', () => hearts(30));
-
+    // Floating hearts effect
     function hearts(n){
       const floaty = document.getElementById('floaty');
       for(let i=0;i<n;i++){
@@ -244,9 +227,9 @@
         el.className = 'h';
         el.textContent = Math.random() > 0.25 ? '❤️' : '💗';
         const left = Math.random() * 100;
-        const size = 16 + Math.random() * 24;
-        const dur  = 2.8 + Math.random() * 2.8;
-        const dx   = (Math.random() * 80 - 40).toFixed(0) + 'px';
+        const size = 16 + Math.random() * 26;
+        const dur  = 2.6 + Math.random() * 2.6;
+        const dx   = (Math.random() * 90 - 45).toFixed(0) + 'px';
         el.style.left = left + 'vw';
         el.style.fontSize = size + 'px';
         el.style.animationDuration = dur + 's';
