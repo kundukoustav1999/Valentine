@@ -28,7 +28,10 @@
         radial-gradient(1200px 800px at 80% 20%, var(--bg2), transparent 55%),
         linear-gradient(180deg, #ffffff, #fff);
       min-height:100vh;
-      overflow:hidden;
+
+      /* ✅ allow vertical scrolling so quiz isn't cut off */
+      overflow-x:hidden;
+      overflow-y:auto;
     }
 
     /* floating hearts */
@@ -44,15 +47,17 @@
       to{ transform: translateY(-115vh) translateX(var(--dx)); opacity:0; }
     }
 
+    /* ✅ make page naturally scroll as content grows */
     .wrap{
       position:relative;
       z-index:1;
       max-width:980px;
       margin:0 auto;
-      padding:24px;
+      padding:32px 24px 56px;
       min-height:100vh;
-      display:grid;
-      place-items:center;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start; /* ✅ not centered vertically -> avoids cutoffs */
     }
 
     .card{
@@ -141,6 +146,7 @@
       border-radius:22px;
       padding:16px;
       text-align:left;
+      border:1px solid rgba(0,0,0,.06);
     }
 
     .grid{
@@ -171,6 +177,7 @@
       align-items:center;
       justify-content:center;
       z-index:20;
+      padding:18px;
     }
 
     .modal{
@@ -228,6 +235,7 @@
       font-weight:800;
       white-space:pre-line;
       text-align:center;
+      line-height:1.6;
     }
   </style>
 </head>
@@ -276,7 +284,7 @@
     </div>
     <div class="modalBody">
       <div class="imgWrap">
-        <img id="modalImg">
+        <img id="modalImg" alt="Pet name image">
       </div>
       <div class="modalMsg" id="modalMsg"></div>
     </div>
@@ -284,47 +292,64 @@
 </div>
 
 <script>
-const petData = {
-  "Putu":    { img:"images/putu.jpg",    msg:"The spring sun shows me your shadow," },
-  "Putkuli": { img:"images/putkuli.jpg", msg:"The spring wind bears me your breath," },
-  "Sonta":   { img:"images/sonta.jpg",   msg:"You are mine for a passing moment," },
-  "Gablu":   { img:"images/gablu.jpg",   msg:"But I am yours to the death." },
-  "Putku":   { img:"images/putku.jpg",   msg:"My rosie." },
-  "Puchu":   { img:"images/puchu.jpg",   msg:"My sunshine." },
-  "Panda":   { img:"images/panda.jpg",   msg:"Mi amore." },
-  "Baka":    { img:"images/baka.jpg",    msg:"Love of my life." }
-};
+  const petData = {
+    "Putu":    { img:"images/putu.jpg",    msg:"The spring sun shows me your shadow," },
+    "Putkuli": { img:"images/putkuli.jpg", msg:"The spring wind bears me your breath," },
+    "Sonta":   { img:"images/sonta.jpg",   msg:"You are mine for a passing moment," },
+    "Gablu":   { img:"images/gablu.jpg",   msg:"But I am yours to the death." },
+    "Putku":   { img:"images/putku.jpg",   msg:"My rosie." },
+    "Puchu":   { img:"images/puchu.jpg",   msg:"My sunshine." },
+    "Panda":   { img:"images/panda.jpg",   msg:"Mi amore." },
+    "Baka":    { img:"images/baka.jpg",    msg:"Love of my life." }
+  };
 
-const noBtn = document.getElementById("noBtn");
-const arena = document.getElementById("arena");
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalImg = document.getElementById("modalImg");
+  const modalMsg = document.getElementById("modalMsg");
+  const closeBtn = document.getElementById("closeBtn");
 
-function moveNo(){
-  const a = arena.getBoundingClientRect();
-  const b = noBtn.getBoundingClientRect();
-  noBtn.style.left = Math.random()*(a.width-b.width)+"px";
-  noBtn.style.top  = Math.random()*(a.height-b.height)+"px";
-}
+  const noBtn = document.getElementById("noBtn");
+  const arena = document.getElementById("arena");
 
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", e=>{e.preventDefault(); moveNo();});
+  function moveNo(){
+    const a = arena.getBoundingClientRect();
+    const b = noBtn.getBoundingClientRect();
 
-document.getElementById("yesBtn").onclick=()=>{
-  document.getElementById("result").style.display="block";
-  document.getElementById("quiz").style.display="block";
-  noBtn.style.display="none";
-};
+    const x = Math.random() * (a.width - b.width);
+    const y = Math.random() * (a.height - b.height);
 
-document.getElementById("options").onclick=e=>{
-  const o=e.target.closest(".opt"); if(!o) return;
-  const d=petData[o.dataset.name];
-  modalTitle.textContent=o.dataset.name;
-  modalImg.src=d.img;
-  modalMsg.textContent=d.msg;
-  modalBackdrop.style.display="flex";
-};
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+    noBtn.style.transform = "none";
+  }
 
-closeBtn.onclick=()=>modalBackdrop.style.display="none";
-modalBackdrop.onclick=e=>{if(e.target===modalBackdrop) closeBtn.click();};
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("touchstart", e => { e.preventDefault(); moveNo(); }, { passive:false });
+
+  document.getElementById("yesBtn").onclick = () => {
+    document.getElementById("result").style.display = "block";
+    document.getElementById("quiz").style.display = "block";
+    noBtn.style.display = "none";
+
+    // ✅ scroll to quiz so all options are visible
+    document.getElementById("quiz").scrollIntoView({behavior:"smooth", block:"start"});
+  };
+
+  document.getElementById("options").onclick = e => {
+    const o = e.target.closest(".opt");
+    if(!o) return;
+
+    const d = petData[o.dataset.name];
+    modalTitle.textContent = o.dataset.name;
+    modalImg.src = d.img;
+    modalMsg.textContent = d.msg;
+
+    modalBackdrop.style.display = "flex";
+  };
+
+  closeBtn.onclick = () => modalBackdrop.style.display = "none";
+  modalBackdrop.onclick = e => { if(e.target === modalBackdrop) closeBtn.click(); };
 </script>
 </body>
 </html>
