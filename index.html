@@ -208,7 +208,12 @@
       background:#fff;
     }
     .imgWrap img{display:block; width:100%; height:auto}
-    .modalMsg{margin-top:10px; color:var(--muted)}
+    .modalMsg{
+      margin-top:10px;
+      color:var(--muted);
+      font-weight:800;
+      line-height:1.5;
+    }
   </style>
 </head>
 <body>
@@ -228,11 +233,11 @@
       </div>
 
       <div class="result" id="result">
-        <strong>That’s the only choice you have.</strong> ❤️
+        <strong>That’s the one and only choice you have.</strong> ❤️
       </div>
 
       <div class="quiz" id="quiz">
-        <h2>Click on your favourite pet name. There is no wrong option.</h2>
+        <h2>Guess your pet name. There is no wrong option.</h2>
         <p class="hint">Pick one 😄</p>
         <div class="grid" id="options">
           <div class="opt" data-name="Putu">Putu</div>
@@ -279,31 +284,33 @@
     const modalMsg      = document.getElementById('modalMsg');
     const closeBtn      = document.getElementById('closeBtn');
 
-    // ✅ OPTION 1: Local images in /images folder (case-sensitive filenames!)
-    // Put these files in your repo at:
+    // ✅ Put these files in your repo at:
     // /images/putu.jpg, /images/putkuli.jpg, /images/sonta.jpg, /images/gablu.jpg,
     // /images/putku.jpg, /images/puchu.jpg, /images/panda.jpg, /images/baka.jpg
-    const imageMap = {
-      "Putu": "images/putu.jpg",
-      "Putkuli": "images/putkuli.jpg",
-      "Sonta": "images/sonta.jpg",
-      "Gablu": "images/gablu.jpg",
-      "Putku": "images/putku.jpg",
-      "Puchu": "images/puchu.jpg",
-      "Panda": "images/panda.jpg",
-      "Baka": "images/baka.jpg"
+    //
+    // If your images are .png, change .jpg to .png below.
+    const petData = {
+      "Putu":    { img: "images/putu.jpg",    msg: "The spring sun shows me your shadow," },
+      "Putkuli": { img: "images/putkuli.jpg", msg: "The spring wind bears me your breath," },
+      "Sonta":   { img: "images/sonta.jpg",   msg: "You are mine for a passing moment," },
+      "Gablu":   { img: "images/gablu.jpg",   msg: "But I am yours to the death." },
+      "Putku":   { img: "images/putku.jpg",   msg: "My rosie. My sunshine. Mi amore. Love of my life." },
+      "Puchu":   { img: "images/puchu.jpg",   msg: "My rosie. My sunshine. Mi amore. Love of my life." },
+      "Panda":   { img: "images/panda.jpg",   msg: "My rosie. My sunshine. Mi amore. Love of my life." },
+      "Baka":    { img: "images/baka.jpg",    msg: "My rosie. My sunshine. Mi amore. Love of my life." }
     };
 
     function openModalForName(name){
+      const data = petData[name];
+
       modalTitle.textContent = name;
 
-      const src = imageMap[name];
-      if (!src) {
+      if (!data) {
         modalImg.removeAttribute("src");
-        modalMsg.textContent = "Image not found — check your filename in /images 😅";
+        modalMsg.textContent = "Image/message not found — check your filenames in /images 😅";
       } else {
-        modalImg.src = src;
-        modalMsg.textContent = `No wrong option. You’re ${name} forever 😌❤️`;
+        modalImg.src = data.img;
+        modalMsg.textContent = data.msg;
       }
 
       modalBackdrop.style.display = "flex";
