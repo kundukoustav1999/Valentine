@@ -212,7 +212,8 @@
       margin-top:10px;
       color:var(--muted);
       font-weight:800;
-      line-height:1.5;
+      line-height:1.6;
+      white-space:pre-line; /* ✅ respects \n line breaks */
     }
   </style>
 </head>
@@ -284,65 +285,34 @@
     const modalMsg      = document.getElementById('modalMsg');
     const closeBtn      = document.getElementById('closeBtn');
 
-    // ✅ Put these files in your repo at:
-    // /images/putu.jpg, /images/putkuli.jpg, /images/sonta.jpg, /images/gablu.jpg,
-    // /images/putku.jpg, /images/puchu.jpg, /images/panda.jpg, /images/baka.jpg
-    //
-    // If your images are .png, change .jpg to .png below.
-    <script>
-  const petData = {
-    "Putu": {
-      img: "images/putu.jpg",
-      msg: "The spring sun shows me your shadow,"
-    },
-    "Putkuli": {
-      img: "images/putkuli.jpg",
-      msg: "The spring wind bears me your breath,"
-    },
-    "Sonta": {
-      img: "images/sonta.jpg",
-      msg: "You are mine for a passing moment,"
-    },
-    "Gablu": {
-      img: "images/gablu.jpg",
-      msg: "But I am yours to the death."
-    },
-    "Putku": {
-      img: "images/putku.jpg",
-      msg: "My rosie."
-    },
-    "Puchu": {
-      img: "images/puchu.jpg",
-      msg: "My sunshine."
-    },
-    "Panda": {
-      img: "images/panda.jpg",
-      msg: "Mi amore."
-    },
-    "Baka": {
-      img: "images/baka.jpg",
-      msg: "Love of my life."
+    // ✅ Local images in /images (case-sensitive filenames)
+    const petData = {
+      "Putu":    { img: "images/putu.jpg",    msg: "The spring sun shows me your shadow," },
+      "Putkuli": { img: "images/putkuli.jpg", msg: "The spring wind bears me your breath," },
+      "Sonta":   { img: "images/sonta.jpg",   msg: "You are mine for a passing moment," },
+      "Gablu":   { img: "images/gablu.jpg",   msg: "But I am yours to the death." },
+
+      "Putku":   { img: "images/putku.jpg",   msg: "My rosie." },
+      "Puchu":   { img: "images/puchu.jpg",   msg: "My sunshine." },
+      "Panda":   { img: "images/panda.jpg",   msg: "Mi amore." },
+      "Baka":    { img: "images/baka.jpg",    msg: "Love of my life." }
+    };
+
+    function openModalForName(name){
+      const data = petData[name];
+      modalTitle.textContent = name;
+
+      if (!data) {
+        modalImg.removeAttribute("src");
+        modalMsg.textContent = "Image/message not found — check your filenames in /images 😅";
+      } else {
+        modalImg.src = data.img;
+        modalMsg.textContent = data.msg; // ✅ shows only that option’s message
+      }
+
+      modalBackdrop.style.display = "flex";
+      hearts(12);
     }
-  };
-
-  function openModalForName(name){
-    const data = petData[name];
-
-    modalTitle.textContent = name;
-
-    if (!data) {
-      modalImg.removeAttribute("src");
-      modalMsg.textContent = "❤️";
-    } else {
-      modalImg.src = data.img;
-      modalMsg.textContent = data.msg;
-    }
-
-    modalBackdrop.style.display = "flex";
-    hearts(12);
-  }
-</script>
-
 
     function closeModal(){
       modalBackdrop.style.display = "none";
