@@ -28,26 +28,10 @@
         radial-gradient(1200px 800px at 80% 20%, var(--bg2), transparent 55%),
         linear-gradient(180deg, #ffffff, #fff);
       min-height:100vh;
-
-      /* ✅ allow vertical scrolling so quiz isn't cut off */
       overflow-x:hidden;
-      overflow-y:auto;
+      overflow-y:auto; /* allow scroll */
     }
 
-    /* floating hearts */
-    .floaty{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0}
-    .h{
-      position:absolute;
-      bottom:-40px;
-      opacity:.28;
-      font-size:22px;
-      animation: rise linear forwards;
-    }
-    @keyframes rise{
-      to{ transform: translateY(-115vh) translateX(var(--dx)); opacity:0; }
-    }
-
-    /* ✅ make page naturally scroll as content grows */
     .wrap{
       position:relative;
       z-index:1;
@@ -57,7 +41,7 @@
       min-height:100vh;
       display:flex;
       justify-content:center;
-      align-items:flex-start; /* ✅ not centered vertically -> avoids cutoffs */
+      align-items:flex-start;
     }
 
     .card{
@@ -107,6 +91,7 @@
       cursor:pointer;
       min-width:120px;
       font-size:16px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .yes{
@@ -166,9 +151,10 @@
       text-align:center;
       font-weight:900;
       cursor:pointer;
+      user-select:none;
     }
 
-    /* MODAL */
+    /* Modal */
     .modalBackdrop{
       position:fixed;
       inset:0;
@@ -211,7 +197,7 @@
       overflow:auto;
     }
 
-    /* ✅ FIXED IMAGE AREA (NO CROP) */
+    /* Fixed image area (no crop) */
     .imgWrap{
       width:100%;
       height:min(62vh,420px);
@@ -237,12 +223,36 @@
       text-align:center;
       line-height:1.6;
     }
+
+    /* ✅ Link to second page */
+    .next{
+      display:none;
+      margin-top:18px;
+      padding:16px;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.06);
+      text-align:left;
+    }
+    .next a{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:900;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(225,29,72,.18);
+      background:rgba(255,241,245,.35);
+    }
+    .next a:hover{background:rgba(255,241,245,.55)}
+    .subtle{color:var(--muted); font-weight:700; margin:0 0 10px}
   </style>
 </head>
 
 <body>
-<div class="floaty" id="floaty"></div>
-
 <div class="wrap">
   <div class="card">
     <div class="badge">❤️ Valentine’s Question</div>
@@ -262,7 +272,7 @@
 
     <div class="quiz" id="quiz">
       <h2>Guess your pet name. There is no wrong option.</h2>
-      <div class="grid" id="options">
+      <div class="grid" id="options" style="margin-top:12px;">
         <div class="opt" data-name="Putu">Putu</div>
         <div class="opt" data-name="Putkuli">Putkuli</div>
         <div class="opt" data-name="Sonta">Sonta</div>
@@ -273,9 +283,19 @@
         <div class="opt" data-name="Baka">Baka</div>
       </div>
     </div>
+
+    <!-- ✅ Second page CTA -->
+    <div class="next" id="next">
+      <p class="subtle">One more thing…</p>
+      <a href="jammu.html">
+        <span>Looking for a tasty treat. Click here to check hidden gems in Jammu.</span>
+        <span aria-hidden="true">➡️</span>
+      </a>
+    </div>
   </div>
 </div>
 
+<!-- Modal -->
 <div class="modalBackdrop" id="modalBackdrop">
   <div class="modal">
     <div class="modalTop">
@@ -315,10 +335,8 @@
   function moveNo(){
     const a = arena.getBoundingClientRect();
     const b = noBtn.getBoundingClientRect();
-
-    const x = Math.random() * (a.width - b.width);
-    const y = Math.random() * (a.height - b.height);
-
+    const x = Math.random() * Math.max(0, (a.width - b.width));
+    const y = Math.random() * Math.max(0, (a.height - b.height));
     noBtn.style.left = x + "px";
     noBtn.style.top  = y + "px";
     noBtn.style.transform = "none";
@@ -330,9 +348,8 @@
   document.getElementById("yesBtn").onclick = () => {
     document.getElementById("result").style.display = "block";
     document.getElementById("quiz").style.display = "block";
+    document.getElementById("next").style.display = "block";
     noBtn.style.display = "none";
-
-    // ✅ scroll to quiz so all options are visible
     document.getElementById("quiz").scrollIntoView({behavior:"smooth", block:"start"});
   };
 
