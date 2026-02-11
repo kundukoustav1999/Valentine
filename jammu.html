@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hidden Gems in Jammu 🍽️</title>
+
+  <style>
+    :root{
+      --bg1:#fff1f5;
+      --bg2:#fff7ed;
+      --text:#111827;
+      --muted:#6b7280;
+      --accent:#e11d48;
+      --accent2:#fb7185;
+      --card:#ffffffcc;
+      --shadow: 0 20px 60px rgba(0,0,0,.12);
+      --radius: 26px;
+    }
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, var(--bg1), transparent 55%),
+        radial-gradient(1200px 800px at 80% 20%, var(--bg2), transparent 55%),
+        linear-gradient(180deg, #ffffff, #fff);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:32px 24px 56px;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    .card{
+      width:min(820px, 92vw);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px 22px;
+      border:1px solid rgba(0,0,0,.06);
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(24px, 3vw, 36px);
+      letter-spacing:-0.02em;
+    }
+
+    p{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .back{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      font-weight:900;
+      color:var(--text);
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      padding:10px 14px;
+      border-radius:999px;
+    }
+    .back:hover{
+      border-color: rgba(225,29,72,.35);
+    }
+
+    .options{
+      margin-top:20px;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+    @media(max-width:640px){
+      .options{grid-template-columns:1fr}
+    }
+
+    a.food{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      text-decoration:none;
+      color:var(--text);
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:20px;
+      padding:16px 18px;
+      box-shadow:0 12px 26px rgba(0,0,0,.06);
+      transition: transform .08s ease, box-shadow .2s ease;
+    }
+
+    a.food:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 34px rgba(0,0,0,.10);
+      border-color: rgba(225,29,72,.35);
+    }
+
+    .food-name{
+      font-weight:900;
+      font-size:18px;
+    }
+
+    .arrow{
+      font-size:20px;
+    }
+
+    .note{
+      margin-top:18px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(225,29,72,.18);
+      color:var(--muted);
+      font-weight:700;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <h1>Hidden gems in Jammu 🍴</h1>
+        <a class="back" href="index.html">⬅️ Back</a>
+      </div>
+
+      <p>Click on a dish and I’ll take you straight to the spot on Google Maps 😌</p>
+
+      <div class="options">
+        <!-- Rajma Chawal -->
+        <a class="food" href="https://maps.app.goo.gl/Bok7nbpRHNQvBQRe9" target="_blank" rel="noopener">
+          <div class="food-name">Rajma Chawal</div>
+          <div class="arrow">📍</div>
+        </a>
+
+        <!-- Suchi Kulcha -->
+        <a class="food" href="https://maps.app.goo.gl/4HCTWR1ZuLGfPg5M7" target="_blank" rel="noopener">
+          <div class="food-name">Suchi Kulcha</div>
+          <div class="arrow">📍</div>
+        </a>
+
+        <!-- Kaladi Kulcha -->
+        <a class="food" href="https://maps.app.goo.gl/c4Fbv9XbsFTJyQgR6" target="_blank" rel="noopener">
+          <div class="food-name">Kaladi Kulcha</div>
+          <div class="arrow">📍</div>
+        </a>
+
+        <!-- Fish Fry -->
+        <a class="food" href="https://maps.app.goo.gl/QTVSwap7X4HC9JxXA" target="_blank" rel="noopener">
+          <div class="food-name">Fish Fry</div>
+          <div class="arrow">📍</div>
+        </a>
+      </div>
+
+      <div class="note">
+        Warning ⚠️ Clicking these may cause instant hunger and spontaneous date plans.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
